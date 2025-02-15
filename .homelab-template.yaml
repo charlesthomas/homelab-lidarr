@@ -1,0 +1,37 @@
+_commit: v1.12.1-6-gbf0c0a5
+_src_path: /Users/crthomas/code/charlesthomas/homelab-template
+additionalResources: ''
+backups: false
+helm: false
+homepageDescription: Music Finder
+homepageEnabled: true
+homepageGroup: Media
+homepageIcon: lidarr
+homepageName: Lidarr
+ingClass: nginx-internal
+ingCname: ''
+ingExtraAnnotations: ''
+ingHost: lidarr.crt.house
+ingName: lidarr
+ingPathType: Prefix
+ingWebSockets: true
+ingress: true
+labels: ''
+name: lidarr
+namespace: lidarr
+pvc: false
+reloader: true
+resources:
+- deployments.yaml
+- external-secrets.yaml
+- ingresses.yaml
+- pvcs.yaml
+- service-accounts.yaml
+- services.yaml
+- statefulsets.yaml
+service: false
+serviceAccount: false
+svcName: lidarr
+svcPortNum: 8686
+upstreamURL: https://lidarr.audio/
+url: https://github.com/charlesthomas/homelab-lidarr

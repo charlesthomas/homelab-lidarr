@@ -1,0 +1,95 @@
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: lidarr
+  namespace: lidarr
+  labels:
+    app: lidarr
+spec:
+  selector:
+    matchLabels:
+      app: lidarr
+  template:
+    metadata:
+      labels:
+        app: lidarr
+    spec:
+      dnsConfig:
+        nameservers:
+        - 10.43.0.10
+      dnsPolicy: None
+      initContainers:
+      - name: cp-config
+        image: alpine:latest
+        resources: {}
+        volumeMounts:
+          - name: lidarr-config
+            mountPath: /tmp/lidarr-config
+          - name: lidarr
+            mountPath: /config
+        command:
+          - cp
+          - -v
+          - /tmp/lidarr-config/config.xml
+          - /config/config.xml
+      containers:
+      - name: lidarr
+        image: lidarr
+        imagePullPolicy: IfNotPresent
+        ports:
+        - name: lidarr
+          containerPort: 8686
+        env:
+        - name: PUID
+          value: "1000"
+        - name: PGID
+          value: "1000"
+        - name: TZ
+          value: "America/Detroit"
+        - name: UMASK
+          value: "022"
+        volumeMounts:
+        - name: lidarr
+          mountPath: /config
+        - name: complete
+          mountPath: /mnt/complete
+        - name: critical-music
+          mountPath: /mnt/critical-music
+        - name: music
+          mountPath: /mnt/music
+        resources:
+          limits:
+            memory: 700Mi
+          requests:
+            memory: 350Mi
+        readinessProbe:
+          tcpSocket:
+            port: lidarr
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          tcpSocket:
+            port: lidarr
+          initialDelaySeconds: 15
+          periodSeconds: 20
+      volumes:
+      - name: lidarr
+        persistentVolumeClaim:
+          claimName: lidarr
+      - name: lidarr-config
+        secret:
+          secretName: lidarr-config
+      - name: complete
+        nfs:
+          path: /volume1/media/complete
+          server: 192.168.1.21
+      - name: critical-music
+        nfs:
+          path: /volume1/critical/media/music
+          server: 192.168.1.21
+      - name: music
+        nfs:
+          path: /volume1/media/music
+          server: 192.168.1.21
+

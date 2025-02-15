@@ -1,0 +1,62 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: lidarr
+
+commonAnnotations:
+  repo: https://github.com/charlesthomas/homelab-lidarr
+
+resources:
+- resources/deployments.yaml
+- resources/external-secrets.yaml
+- resources/ingresses.yaml
+- resources/namespaces.yaml
+- resources/pvcs.yaml
+- resources/service-accounts.yaml
+- resources/services.yaml
+- resources/statefulsets.yaml
+
+images:
+  - name: postgres
+    newTag: "14.15"
+  - name: lidarr
+    newName: ghcr.io/linuxserver/lidarr
+    newTag: 2.9.6.4552-ls30
+
+patches:
+- patch: |-
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: all
+      namespace: lidarr
+      annotations:
+        reloader.stakater.com/auto: "true"
+  target:
+    kind: Deployment
+- patch: |-
+    apiVersion: apps/v1
+    kind: StatefulSet
+    metadata:
+      name: all
+      namespace: lidarr
+      annotations:
+        reloader.stakater.com/auto: "true"
+  target:
+    kind: StatefulSet
+- patch: |-
+    apiVersion: networking.k8s.io/v1
+    kind: Ingress
+    metadata:
+      name: lidarr
+      namespace: lidarr
+      annotations:
+        gethomepage.dev/href: https://lidarr.crt.house
+        gethomepage.dev/enabled: "true"
+        gethomepage.dev/description: Music Finder
+        gethomepage.dev/group: Media
+        gethomepage.dev/icon: lidarr
+        gethomepage.dev/name: Lidarr
+        gethomepage.dev/pod-selector: ""
+  target:
+    kind: Ingress

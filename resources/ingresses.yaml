@@ -1,0 +1,25 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: lidarr
+  namespace: lidarr
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: lidarr.crt.house
+    nginx.org/websocket-services: lidarr
+spec:
+  ingressClassName: nginx-internal
+  rules:
+    - host: "lidarr.crt.house"
+      http:
+        paths:
+          - path: "/"
+            pathType: Prefix
+            backend:
+              service:
+                name: lidarr
+                port:
+                  number: 8686
+  tls:
+    - hosts:
+      - lidarr.crt.house
