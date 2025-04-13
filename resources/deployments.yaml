@@ -52,12 +52,8 @@ spec:
         volumeMounts:
         - name: lidarr
           mountPath: /config
-        - name: complete
-          mountPath: /mnt/complete
-        - name: critical-music
-          mountPath: /mnt/critical-music
-        - name: music
-          mountPath: /mnt/music
+        - name: media
+          mountPath: /mnt/media
         resources:
           limits:
             memory: 700Mi
@@ -80,16 +76,8 @@ spec:
       - name: lidarr-config
         secret:
           secretName: lidarr-config
-      - name: complete
+      - name: media
         nfs:
-          path: /volume1/media/complete
-          server: 192.168.1.21
-      - name: critical-music
-        nfs:
-          path: /volume1/critical/media/music
-          server: 192.168.1.21
-      - name: music
-        nfs:
-          path: /volume1/media/music
+          path: /volume1/media
           server: 192.168.1.21
 
