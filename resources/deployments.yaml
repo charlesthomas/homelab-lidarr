@@ -22,7 +22,9 @@ spec:
       initContainers:
       - name: cp-config
         image: alpine:latest
-        resources: {}
+        resources:
+          limits:
+            memory: 4Gi
         volumeMounts:
           - name: lidarr-config
             mountPath: /tmp/lidarr-config
