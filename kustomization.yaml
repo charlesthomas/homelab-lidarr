@@ -21,7 +21,7 @@ images:
     newTag: "14.15"
   - name: lidarr
     newName: ghcr.io/linuxserver/lidarr
-    newTag: 3.1.0.4875-ls11
+    newTag: 3.1.0
 
 patches:
 - patch: |-
